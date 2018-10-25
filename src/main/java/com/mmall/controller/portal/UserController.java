@@ -2,6 +2,11 @@ package com.mmall.controller.portal;/*
  * create by qwy91 on 2018/10/25
  **/
 
+import com.mmall.common.Const;
+import com.mmall.common.ServerResponse;
+import com.mmall.pojo.User;
+import com.mmall.service.IUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -12,6 +17,9 @@ import javax.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/user/")
 public class UserController {
+    @Autowired
+    private IUserService iUserService;
+
     /**
      * 用户登录
      *
@@ -22,12 +30,20 @@ public class UserController {
      */
     @RequestMapping(value = "login.do", method = RequestMethod.POST)
     @ResponseBody
-    public Object Login(String username, String password, HttpSession session) {
-
-        //service ---mybatis--dao
-
-        return null;
-
+    public ServerResponse<User> Login(String username, String password, HttpSession session) {
+        ServerResponse<User> response = iUserService.login(username, password);
+        if (response.isSuccess()) {
+            session.setAttribute(Const.CURRENT_USER, response.getData());
+        }
+        return response;
     }
+
+    @RequestMapping(value = "logout.do", method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<String> logout(HttpSession session) {
+        session.removeAttribute(Const.CURRENT_USER);
+        return ServerResponse.createBySuccess();
+    }
+
 
 }
