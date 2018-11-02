@@ -1,6 +1,5 @@
 package com.mmall.dao;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.mmall.pojo.User;
 import org.apache.ibatis.annotations.Param;
 
